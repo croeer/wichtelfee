@@ -9,7 +9,11 @@
     </section>
     <section>
       <ul>
-        <li v-for="w in wichtel" :key="w">{{ w }}
+        <li v-for="w in wichtel" :key="w">
+           <div class="view">
+          <label >{{ w }}</label>
+          <button class="destroy" @click="removeWichtel(w)"></button>
+        </div>
         </li>
       </ul>
     </section>
@@ -34,8 +38,11 @@ export default {
       this.wichtel.push(this.newWichtel);
       this.newWichtel = '';
     },
+    removeWichtel: function (w) {
+      this.wichtel.splice(this.wichtel.indexOf(w), 1)
+    },
     composeList() {
-      this.wichtel = _.shuffle(this.wichtel)
+      //this.wichtel = _.shuffle(this.wichtel)
       ;
     }
   }
@@ -57,5 +64,43 @@ li {
 }
 a {
   color: #42b983;
+}
+
+li.editing .view {
+	display: none;
+}
+
+li .destroy {
+	display: none;
+	/*position: absolute;
+	/*
+  top: 0;
+	right: 10px;
+	bottom: 0;
+	width: 40px;
+	height: 40px;
+	margin: auto 0;
+  
+	font-size: 30px;*/
+	color: #cc9a9a;
+	/* margin-bottom: 11px; */
+	transition: color 0.2s ease-out;
+}
+
+li .destroy:hover {
+	color: #af5b5e;
+}
+
+li .destroy:after {
+	content: '×';
+}
+
+li:hover .destroy {
+	display: inline;
+  position: relative;
+}
+
+li .edit {
+	display: none;
 }
 </style>
