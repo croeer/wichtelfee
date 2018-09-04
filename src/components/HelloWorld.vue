@@ -1,6 +1,9 @@
 <template>
   <div class="hello">
     <h1>Wichtelfee</h1>
+    <div align="right">
+      <input type="text" v-model='token' placeholder="smptjs token">
+    </div>
     <img src="../assets/wichtel.jpg">
     <section>
       Teilnehmer hinzufügen:
@@ -11,7 +14,7 @@
       <ul>
         <li v-for="w in wichtel" :key="w">
            <div class="view">
-          <label >{{ w }}</label>
+          <label @dblclick="editWichtel(w)">{{ w }}</label>
           <button class="destroy" @click="removeWichtel(w)"></button>
         </div>
         </li>
@@ -29,7 +32,8 @@ export default {
   data () {
     return {
       newWichtel: '',
-      wichtel: ['test']
+      wichtel: ['test'],
+      token: ''
     }
   },
   methods: {
@@ -42,7 +46,14 @@ export default {
       this.wichtel.splice(this.wichtel.indexOf(w), 1)
     },
     composeList() {
-      //this.wichtel = _.shuffle(this.wichtel)
+      console.log(this.token)
+      
+      Email.send("phueghy@gmx.de",
+      "christian@roeer.info",
+      "This is a subject",
+      "this is the body",
+      {token: this.token});
+      
       ;
     }
   }
