@@ -23,7 +23,7 @@
     <section>
       <ul v-if="showResults">
         <li v-for="r in resultList" :key="r.name">
-              {{ r.name }} -> {{ r.partner }} <a href="mailto:test@test.de?subject=wichtelfee: dein wichtelpartner">mail</a>
+              {{ r.name }} -> {{ r.partner }} <a :href="r.text">mail</a>
         </li>
       </ul>
     </section>
@@ -71,6 +71,7 @@ export default {
       this.wichtel.splice(this.wichtel.indexOf(w), 1)
     },
     testlist() {
+      this.resultList.length = 0;
       var l = this.wichtel.slice(0);
       shuffle(l);
       while (!checkLists(this.wichtel, l)) {
@@ -78,10 +79,19 @@ export default {
       }
       console.log(l);
       for (var i=0; i < this.wichtel.length; i++) {
+        var linktext = "mailto:" + this.wichtel[i] 
+        + "?subject=Wichtelfee: Dein Wichtelpartner&"
+        + "body=Hallo " + this.wichtel[i] + ",%0d%0a%0d%0a"
+        + "Dein Wichtelpartner ist:%0d%0a%0d%0a"
+        + l[i] + "%0d%0a%0d%0a"
+        + "Viele Grüße,%0d%0a%0d%0a"
+        + "Deine Wichtelfee";
+
         var o = {
           name:this.wichtel[i],
-          partner:l[i]
-        }
+          partner:l[i],
+          text:linktext
+        };
         this.resultList.push(o);
       }
       this.showResults = true;
