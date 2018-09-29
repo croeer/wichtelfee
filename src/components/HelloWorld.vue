@@ -1,9 +1,6 @@
 <template>
   <div class="hello">
     <h1>Wichtelfee</h1>
-    <div align="right">
-      <input type="text" v-model='token' placeholder="smptjs token">
-    </div>
     <img src="../assets/wichtel.jpg">
     <section>
       Teilnehmer hinzufügen:
@@ -21,19 +18,47 @@
       </ul>
     </section>
     <section>
-      <button @click="composeList">Würfeln</button>
+      <button @click="testlist">Würfeln</button>
+    </section>
+    <section>
+      <ul v-if="showResults">
+        <li v-for="r in resultList" :key="r.name">
+              {{ r.name }} -> {{ r.partner }} <a href="mailto:test@test.de?subject=wichtelfee: dein wichtelpartner">mail</a>
+        </li>
+      </ul>
     </section>
   </div>
 </template>
 
 <script>
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function checkLists(a,b) {
+  if (a.length < 2) {
+    return true;
+  }
+  for (var i=0; i < a.length; i++) {
+    if (a[i]==b[i]){
+      return false;
+    }
+  }
+  return true;
+}
+
 export default {
   name: 'HelloWorld',
   data () {
     return {
       newWichtel: '',
-      wichtel: ['test'],
-      token: ''
+      wichtel: [1,2,3,4,5,6,7,8,9],
+      showResults: false,
+      resultList: []
     }
   },
   methods: {
@@ -45,16 +70,21 @@ export default {
     removeWichtel: function (w) {
       this.wichtel.splice(this.wichtel.indexOf(w), 1)
     },
-    composeList() {
-      console.log(this.token)
-      
-      Email.send("phueghy@gmx.de",
-      "christian@roeer.info",
-      "This is a subject",
-      "this is the body",
-      {token: this.token});
-      
-      ;
+    testlist() {
+      var l = this.wichtel.slice(0);
+      shuffle(l);
+      while (!checkLists(this.wichtel, l)) {
+        shuffle(l);
+      }
+      console.log(l);
+      for (var i=0; i < this.wichtel.length; i++) {
+        var o = {
+          name:this.wichtel[i],
+          partner:l[i]
+        }
+        this.resultList.push(o);
+      }
+      this.showResults = true;
     }
   }
 }
